@@ -1,0 +1,40 @@
+{
+  "name": "reachinbox-onebox",
+  "version": "1.0.0",
+  "description": "Real-Time AI Email Onebox",
+  "main": "dist/app.js",
+  "scripts": {
+    "start": "node dist/app.js",
+    "dev": "ts-node src/app.ts",
+    "build": "tsc",
+    "postinstall": "npm run build"
+  },
+  "keywords": [
+    "email",
+    "ai",
+    "elasticsearch",
+    "qdrant",
+    "imap"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.10.0",
+    "@qdrant/js-client-rest": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mailparser": "^3.7.5",
+    "node-imap": "^0.9.6",
+    "typescript": "^5.1.6",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.4.5",
+    "@types/node-imap": "^0.9.0",
+    "ts-node": "^10.9.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
