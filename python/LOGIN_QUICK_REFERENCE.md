@@ -390,10 +390,165 @@ if (loginResponse.ok) {
 ```
 
 **Time Slot Format**:
-- Format: `HH:MM` (24-hour format)
+- Format: `HH:MM` or `HH:MM:SS` (24-hour format)
 - Minimum duration: 15 minutes
 - Maximum duration: 4 hours
 - Overlapping slots are automatically prevented
+
+### ⚠️ Format Examples - Correct vs Incorrect
+
+**✅ CORRECT Date Format:**
+```json
+{
+    "date": "2025-12-06"     // ✅ YYYY-MM-DD format
+}
+```
+
+**❌ INCORRECT Date Formats:**
+```json
+{
+    "date": "12-06-2025"     // ❌ Wrong format
+    "date": "2025/12/06"     // ❌ Wrong separator
+    "date": "06-12-2025"     // ❌ Wrong order
+    "date": "Dec 6, 2025"    // ❌ Wrong format
+}
+```
+
+**✅ CORRECT Time Formats:**
+```json
+{
+    "start_time": "10:00",        // ✅ HH:MM format
+    "end_time": "14:30",          // ✅ HH:MM format
+    
+    // OR with seconds (also accepted):
+    "start_time": "10:00:00",      // ✅ HH:MM:SS format
+    "end_time": "14:30:00"         // ✅ HH:MM:SS format
+}
+```
+
+**❌ INCORRECT Time Formats:**
+```json
+{
+    "start_time": "10:00 AM",      // ❌ Don't use AM/PM
+    "start_time": "10.00",        // ❌ Wrong separator
+    "start_time": "10",           // ❌ Missing minutes
+    "start_time": "10:0",         // ❌ Minutes must be 2 digits
+    "start_time": "25:00"         // ❌ Invalid hour (max 23)
+}
+```
+
+**✅ COMPLETE CORRECT Example - Set Availability:**
+```json
+{
+    "date": "2025-12-06",
+    "time_slots": [
+        {
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "is_available": true
+        },
+        {
+            "start_time": "11:00",
+            "end_time": "11:30",
+            "is_available": true
+        },
+        {
+            "start_time": "14:00",
+            "end_time": "15:00",
+            "is_available": true
+        }
+    ]
+}
+```
+
+**✅ COMPLETE CORRECT Example - Book Appointment:**
+```json
+{
+    "doctor_id": 123,
+    "date": "2025-12-06",
+    "start_time": "10:00:00",
+    "end_time": "11:00:00",
+    "notes": "Regular checkup"
+}
+```
+
+**Python Example with Correct Format:**
+```python
+import requests
+from datetime import datetime, date
+
+session = requests.Session()
+session.post('http://localhost:8000/api/auth/login/', 
+             json={'username': 'dr_smith', 'password': 'SecurePass123!'})
+
+# ✅ CORRECT: Using string format
+availability_data = {
+    "date": "2025-12-06",  # YYYY-MM-DD format
+    "time_slots": [
+        {
+            "start_time": "10:00",    # HH:MM format
+            "end_time": "11:00",      # HH:MM format
+            "is_available": True
+        }
+    ]
+}
+
+# ✅ CORRECT: Using datetime objects (Django will convert)
+from datetime import date, time
+availability_data = {
+    "date": date(2025, 12, 6),  # Python date object
+    "time_slots": [
+        {
+            "start_time": time(10, 0),  # Python time object (10:00)
+            "end_time": time(11, 0),    # Python time object (11:00)
+            "is_available": True
+        }
+    ]
+}
+
+response = session.post('http://localhost:8000/api/doctors/availability/',
+                        json=availability_data)
+print(response.json())
+```
+
+**JavaScript Example with Correct Format:**
+```javascript
+// ✅ CORRECT Format
+const availabilityData = {
+    date: "2025-12-06",  // YYYY-MM-DD format
+    time_slots: [
+        {
+            start_time: "10:00",    // HH:MM format
+            end_time: "11:00",      // HH:MM format
+            is_available: true
+        }
+    ]
+};
+
+fetch('http://localhost:8000/api/doctors/availability/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(availabilityData)
+});
+```
+
+**cURL Example with Correct Format:**
+```bash
+curl -X POST http://localhost:8000/api/doctors/availability/ \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{
+    "date": "2025-12-06",
+    "time_slots": [
+      {
+        "start_time": "10:00",
+        "end_time": "11:00",
+        "is_available": true
+      }
+    ]
+  }'
+```
 
 #### 4. View & Manage Own Availability and Bookings
 - ✅ **View Own Availability**: `GET /api/doctors/availability/`
