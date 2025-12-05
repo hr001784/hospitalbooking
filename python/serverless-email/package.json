@@ -1,0 +1,17 @@
+{
+  "name": "hms-email-service",
+  "version": "1.0.0",
+  "description": "Serverless email service for HMS",
+  "main": "handler.py",
+  "scripts": {
+    "start": "serverless offline start",
+    "deploy": "serverless deploy"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.0.0",
+    "serverless-python-requirements": "^6.0.0"
+  }
+}
+
